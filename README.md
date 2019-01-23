@@ -6,3 +6,4 @@ opencv
 python2
 
 後で依存ライブラリ減らす
+csvにラベル
