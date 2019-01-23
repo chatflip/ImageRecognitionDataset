@@ -111,3 +111,6 @@ venv.bak/
 
 *.tar
 *.gz
+
+#caltech101
+caltech101/datasets/101_ObjectCategories/BACKGROUND_Google/tmp
