@@ -114,3 +114,6 @@ venv.bak/
 
 #caltech101
 caltech101/datasets/101_ObjectCategories/BACKGROUND_Google/tmp
+#calteh256
+caltech256/datasets/256_ObjectCategories/198.spider/RENAME2/RENAME2
+caltech256/datasets/256_ObjectCategories/056.dog/greg
