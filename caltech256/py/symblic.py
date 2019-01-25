@@ -7,7 +7,7 @@ import numpy as np
 if __name__ == '__main__':
     root = os.getcwd()
     src_root = root+"/datasets/256_ObjectCategories/"
-    dst_root = root+"/data/caltech256/"
+    dst_root = root+"/data/"
     for num_subset in range(0,10):
         if not os.path.exists(dst_root+"subset"+str(num_subset)):
             os.makedirs(dst_root+"subset"+str(num_subset))
