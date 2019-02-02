@@ -10,5 +10,7 @@ bash scripts/download.sh
 opencv
 python2
 
+cPickle
+
 後で依存ライブラリ減らす
 csvにラベル
