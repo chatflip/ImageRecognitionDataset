@@ -17,7 +17,6 @@ if __name__ == '__main__':
     train_images, train_labels = load_mnist("",kind='train')
     count = 0
     for image, label in zip(train_images, train_labels):
-        print(label)
         if not os.path.exists("data/train/{}".format(label)):
             os.makedirs("data/train/{}".format(label))
         image = np.reshape(image, (28,28)).astype(np.uint8)
