@@ -11,8 +11,8 @@ $ pip install pillow
 
 ## Usage
 ```
-cd caltech101
-bash scripts/start.sh
+$ cd caltech101
+$ bash scripts/start.sh
 ```
 
 ## a
