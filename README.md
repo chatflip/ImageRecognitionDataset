@@ -1,9 +1,19 @@
-# ImageRecognitionDataset
+ImageRecognitionDataset
+====
 
 Caltech101/256, CIFAR-10/100, MNIST/FashionMNIST
 
-opencv
-python2
+## Install
+```
+$ pip install numpy
+$ pip install pillow
+```
 
-後で依存ライブラリ減らす
+## Usage
+```
+$ cd caltech101
+$ bash scripts/start.sh
+```
+
+## a
 csvにラベル
