@@ -14,6 +14,3 @@ $ pip install pillow
 $ cd caltech101
 $ bash scripts/start.sh
 ```
-
-## a
-csvにラベル
