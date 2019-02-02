@@ -103,13 +103,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-#etc
-*.png
-*.jpg
-*.csv
-*.tar
-*.gz
-
 #Mac
 .DS_Store
 
@@ -122,3 +115,10 @@ caltech256/datasets/256_ObjectCategories/198.spider/RENAME2
 #keep classlabel
 !MNIST/csv/class_name.csv
 !fashionMNIST/csv/class_name.csv
+
+#etc
+*.png
+*.jpg
+*.csv
+*.tar
+*.gz
