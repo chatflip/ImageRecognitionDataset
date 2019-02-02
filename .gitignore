@@ -112,13 +112,13 @@ caltech101/datasets/101_ObjectCategories/BACKGROUND_Google/tmp
 caltech256/datasets/256_ObjectCategories/056.dog/greg
 caltech256/datasets/256_ObjectCategories/198.spider/RENAME2
 
-#keep classlabel
-!/MNIST/csv
-!/fashionMNIST/csv
+caltech101/csv
+caltech256/csv
+CIFAR10/csv
+CIFAR100/csv
 
 #etc
 *.png
 *.jpg
-*.csv
 *.tar
 *.gz
