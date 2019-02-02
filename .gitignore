@@ -103,13 +103,10 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-#img
+#etc
 *.png
 *.jpg
-
 *.csv
-
-
 *.tar
 *.gz
 
@@ -121,3 +118,7 @@ caltech101/datasets/101_ObjectCategories/BACKGROUND_Google/tmp
 #calteh256
 caltech256/datasets/256_ObjectCategories/056.dog/greg
 caltech256/datasets/256_ObjectCategories/198.spider/RENAME2
+
+#keep classlabel
+!MNIST/csv/class_name.csv
+!fashionMNIST/csv/class_name.csv
