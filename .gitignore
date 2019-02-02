@@ -113,8 +113,8 @@ caltech256/datasets/256_ObjectCategories/056.dog/greg
 caltech256/datasets/256_ObjectCategories/198.spider/RENAME2
 
 #keep classlabel
-!MNIST/csv/class_name.csv
-!fashionMNIST/csv/class_name.csv
+!MNIST/csv
+!fashionMNIST/csv
 
 #etc
 *.png
