@@ -1,11 +1,18 @@
 import os
-import cPickle
 import numpy as np
 from PIL import Image
 
+try:
+   import cPickle as pickle
+except:
+   import pickle
+
 def unpickle(file):
     with open(file, 'rb') as fo:
-       dict = cPickle.load(fo)
+        try:
+            dict = pickle.load(fo, encoding='latin1')
+        except:
+            dict = pickle.load(fo)
     fo.close()
     return dict
 
@@ -22,7 +29,7 @@ if __name__ == '__main__':
         for class_name in class_names:
             os.makedirs('data/train/'+class_name)
             os.makedirs('data/test/'+class_name)
-    np.savetxt('csv/subclass_name.csv',meta_data['fine_label_names'],fmt='%s')
+    np.savetxt('csv/class_name.csv',meta_data['fine_label_names'],fmt='%s')
 
     train = unpickle(folder_path+'/train')
     train_datas = train['data']

@@ -1,7 +1,5 @@
 import os
-import sys
 import random
-import argparse
 import numpy as np
 
 if __name__ == '__main__':
