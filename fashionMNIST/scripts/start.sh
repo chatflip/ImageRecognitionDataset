@@ -1,5 +1,4 @@
 #!/bin/sh
-mkdir -p csv
 mkdir -p data
 
 wget http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz

@@ -1,5 +1,4 @@
 #!/bin/sh
-mkdir -p csv
 mkdir -p data
 
 wget http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz
