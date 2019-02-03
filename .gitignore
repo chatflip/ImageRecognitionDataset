@@ -116,6 +116,8 @@ caltech101/csv
 caltech256/csv
 CIFAR10/csv
 CIFAR100/csv
+ilsvrc2012
+places365
 
 #etc
 *.png
