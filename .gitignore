@@ -112,12 +112,10 @@ caltech101/datasets/101_ObjectCategories/BACKGROUND_Google/tmp
 caltech256/datasets/256_ObjectCategories/056.dog/greg
 caltech256/datasets/256_ObjectCategories/198.spider/RENAME2
 
-caltech101/csv
-caltech256/csv
-CIFAR10/csv
-CIFAR100/csv
 ilsvrc2012
 places365
+voc2007
+voc2012
 
 #etc
 *.png
