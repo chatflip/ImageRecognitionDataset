@@ -1,5 +1,6 @@
 import os
 import random
+
 import numpy as np
 
 if __name__ == '__main__':
@@ -7,7 +8,7 @@ if __name__ == '__main__':
     src_root = "./datasets/101_ObjectCategories/"
     class_names = os.listdir(src_root)
     class_names.sort()
-    for num_subset in range(0,10):
+    for num_subset in range(0, 10):
         train_list = []
         test_list = []
         for class_name in class_names:

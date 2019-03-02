@@ -1,6 +1,7 @@
-import numpy as np
 import os
 import random
+
+import numpy as np
 
 if __name__ == '__main__':
     src_root = "data/original/"

@@ -1,11 +1,13 @@
 import os
+
 import numpy as np
 from PIL import Image
 
 try:
-   import cPickle as pickle
+    import cPickle as pickle
 except:
-   import pickle
+    import pickle
+
 
 def unpickle(file):
     with open(file, 'rb') as fo:
@@ -16,8 +18,9 @@ def unpickle(file):
     fo.close()
     return dict
 
+
 def conv_data2image(data):
-    return np.rollaxis(data.reshape((3,32,32)),0,3)
+    return np.rollaxis(data.reshape((3, 32, 32)), 0, 3)
 
 if __name__ == '__main__':
     folder_path = "cifar-100-python"
@@ -29,14 +32,14 @@ if __name__ == '__main__':
         for class_name in class_names:
             os.makedirs('data/train/'+class_name)
             os.makedirs('data/test/'+class_name)
-    np.savetxt('csv/class_name.csv',meta_data['fine_label_names'],fmt='%s')
+    np.savetxt('csv/class_name.csv', meta_data['fine_label_names'], fmt='%s')
 
     train = unpickle(folder_path+'/train')
     train_datas = train['data']
     train_labels = train['fine_labels']
     train_filenames = train['filenames']
     subset_count = 0
-    for data,label,filename in zip(train_datas,train_labels,train_filenames):
+    for data, label, filename in zip(train_datas, train_labels, train_filenames):
         pilimg = Image.fromarray(np.uint8(conv_data2image(data)))
         pilimg.save('data/train/'+class_names[label]+'/'+filename)
 
@@ -44,6 +47,6 @@ if __name__ == '__main__':
     test_datas = test['data']
     test_labels = test['fine_labels']
     test_filenames = test['filenames']
-    for data,label,filename in zip(test_datas,test_labels,test_filenames):
+    for data, label, filename in zip(test_datas, test_labels, test_filenames):
         pilimg = Image.fromarray(np.uint8(conv_data2image(data)))
         pilimg.save('data/test/'+class_names[label]+'/'+filename)

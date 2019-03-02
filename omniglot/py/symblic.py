@@ -18,8 +18,8 @@ if __name__ == '__main__':
             if not os.path.exists(dst_root+"subset"+str(num_subset)+"/train/"+class_name):
                 os.makedirs(dst_root+"subset"+str(num_subset)+"/train/"+class_name)
                 os.makedirs(dst_root+"subset"+str(num_subset)+"/test/"+class_name)
-        train_lists = np.genfromtxt(root+"/csv/omniglot_train_subset"+str(num_subset)+".csv",dtype=np.str)
-        test_lists = np.genfromtxt(root+"/csv/omniglot_test_subset"+str(num_subset)+".csv",dtype=np.str)
+        train_lists = np.genfromtxt(root+"/csv/omniglot_train_subset"+str(num_subset)+".csv", dtype=np.str)
+        test_lists = np.genfromtxt(root+"/csv/omniglot_test_subset"+str(num_subset)+".csv", dtype=np.str)
         dst_subset_root = dst_root+"subset"+str(num_subset)+"/"
         for train_list in train_lists:
             os.symlink(src_root+train_list, dst_subset_root+"train/"+train_list)

@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     for src_root in (src_root1, src_root2):
         for root, dirs, file_names in os.walk(src_root):
-             if len(dirs) == 0:
+            if len(dirs) == 0:
                 tmp = file_names[0]
                 class_num = int(tmp[:int(tmp.find("_"))])
                 num2class.setdefault(class_num, root)
