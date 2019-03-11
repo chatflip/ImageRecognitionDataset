@@ -103,12 +103,12 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-#Mac
+# Mac
 .DS_Store
 
-#caltech101
+# caltech101
 caltech101/datasets/101_ObjectCategories/BACKGROUND_Google/tmp
-#calteh256
+# calteh256
 caltech256/datasets/256_ObjectCategories/056.dog/greg
 caltech256/datasets/256_ObjectCategories/198.spider/RENAME2
 
@@ -117,7 +117,7 @@ places365
 voc2007
 voc2012
 
-#etc
+# etc
 *.png
 *.jpg
 *.tar
