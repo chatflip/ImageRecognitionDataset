@@ -1,7 +1,7 @@
 ImageRecognitionDataset
 ====
 
-Caltech101/256, CIFAR-10/100, MNIST/FashionMNIST
+Caltech101/256, CIFAR-10/100, MNIST/FashionMNIST, omniglot
 
 ## Requirement
 python 2.x/3.x

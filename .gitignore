@@ -111,6 +111,11 @@ caltech101/datasets/101_ObjectCategories/BACKGROUND_Google/tmp
 # calteh256
 caltech256/datasets/256_ObjectCategories/056.dog/greg
 caltech256/datasets/256_ObjectCategories/198.spider/RENAME2
+# omniglot
+omniglot/data
+omniglot/images_background
+omniglot/images_evaluation
+
 
 ilsvrc2012
 places365
