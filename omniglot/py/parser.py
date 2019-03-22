@@ -32,7 +32,6 @@ def make_subset(src):
     src_root = '{}/data/{}/'.format(root, src)
     dst_root = '{}/data/'.format(root)
     for num_subset in range(20):
-        print('Create subset: {}/20'.format(num_subset+1))
         subset_root = '{}subset{}/{}/'.format(dst_root, num_subset, src)
         mkdir(subset_root)
         mkdir(subset_root+'train')
@@ -63,7 +62,11 @@ def remove(target):
 
 if __name__ == '__main__':
     mkdir('data')
+    src_root1 = 'images_background/'
+    dst_root1 = 'data/' + src_root1
     zipfile1 = 'images_background.zip'
+    src_root2 = 'images_evaluation/'
+    dst_root2 = 'data/' + src_root2
     zipfile2 = 'images_evaluation.zip'
     # Extract unzip files
     print('Extract zipfile: {}'.format(zipfile1))
@@ -71,18 +74,15 @@ if __name__ == '__main__':
     print('Extract zipfile: {}'.format(zipfile2))
     unzip(zipfile2)
     # Rearranging category order
-    src_root = 'images_background/'
-    dst_root = 'data/' + src_root
-    src_root2 = 'images_evaluation/'
-    dst_root2 = 'data/' + src_root2
     print('Rearranging category order')
-    convert(src_root, dst_root)
+    convert(src_root1, dst_root1)
     convert(src_root2, dst_root2)
     # Create subset
-    print('Create subset')
+    print('Create subset: images_background')
     make_subset('images_background')
+    print('Create subset: images_evaluation')
     make_subset('images_evaluation')
     # Remove unzip files
-    print('Remove unzipfile')
+    print('Remove unzip file')
     remove(zipfile1)
     remove(zipfile2)
