@@ -16,6 +16,8 @@ def load_mnist(path, kind='train'):
     return images, labels
 
 if __name__ == '__main__':
+    if not os.path.exists('data'):
+        os.makedirs('data')
     train_images, train_labels = load_mnist("", kind='train')
     count = 0
     for image, label in zip(train_images, train_labels):
