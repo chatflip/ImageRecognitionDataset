@@ -1,6 +1,8 @@
 import os
 import tarfile
 import shutil
+import sys
+import urllib.request
 
 import numpy as np
 from PIL import Image
@@ -9,6 +11,24 @@ try:
     import cPickle as pickle
 except:
     import pickle
+
+
+def progress(block_count, block_size, total_size):
+    percentage = min(int(100.0 * block_count * block_size / total_size), 100)
+    bar = '[{}>{}]'.format('='*(percentage//4), ' '*(25-percentage//4))
+    sys.stdout.write('{} {:3d}%\r'.format(bar, percentage))
+    sys.stdout.flush()
+
+
+def download(baseurl, filename):
+    try:
+        urllib.request.urlretrieve(url=baseurl+filename,
+                                   filename=filename,
+                                   reporthook=progress)
+        print('')
+    except (OSError, urllib.error.HTTPError) as err:
+        print('ERROR :{}'.fromat(err.code))
+        print(err.reason)
 
 
 def unpickle(file):
@@ -36,7 +56,10 @@ def remove(target):
 if __name__ == '__main__':
     if not os.path.exists('data'):
         os.makedirs('data')
+    baseurl = 'https://www.cs.toronto.edu/~kriz/'
     tar_filename = 'cifar-100-python.tar.gz'
+    print('Downloading: {}'.format(tar_filename))
+    download(baseurl, tar_filename)
     folder_path = "cifar-100-python"
     untar(tar_filename)
     meta_data = unpickle(folder_path+'/meta')

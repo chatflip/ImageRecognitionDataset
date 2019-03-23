@@ -1,7 +1,26 @@
 import os
-import random
 import shutil
+import sys
+import urllib.request
 import zipfile
+
+
+def progress(block_count, block_size, total_size):
+    percentage = min(int(100.0 * block_count * block_size / total_size), 100)
+    bar = '[{}>{}]'.format('='*(percentage//4), ' '*(25-percentage//4))
+    sys.stdout.write('{} {:3d}%\r'.format(bar, percentage))
+    sys.stdout.flush()
+
+
+def download(baseurl, filename):
+    try:
+        urllib.request.urlretrieve(url=baseurl+filename,
+                                   filename=filename,
+                                   reporthook=progress)
+        print('')
+    except (OSError, urllib.error.HTTPError) as err:
+        print('ERROR :{}'.fromat(err.code))
+        print(err.reason)
 
 
 def unzip(target):
@@ -62,12 +81,19 @@ def remove(target):
 
 if __name__ == '__main__':
     mkdir('data')
+    baseurl = 'https://raw.githubusercontent.com/'\
+              'brendenlake/omniglot/master/python/'
+    zipfile1 = 'images_background.zip'
+    zipfile2 = 'images_evaluation.zip'
     src_root1 = 'images_background/'
     dst_root1 = 'data/' + src_root1
-    zipfile1 = 'images_background.zip'
     src_root2 = 'images_evaluation/'
     dst_root2 = 'data/' + src_root2
-    zipfile2 = 'images_evaluation.zip'
+    # Download zipfiles
+    print('Downloading: {}'.format(zipfile1))
+    download(baseurl, zipfile1)
+    print('Downloading: {}'.format(zipfile2))
+    download(baseurl, zipfile2)
     # Extract unzip files
     print('Extract zipfile: {}'.format(zipfile1))
     unzip(zipfile1)
