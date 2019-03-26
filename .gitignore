@@ -106,13 +106,20 @@ venv.bak/
 # Mac
 .DS_Store
 
+data
+CIFAR10
+CIFAR100
+MNIST
+fashionMNIST
+caltech101
+caltech256
+omniglot
 ilsvrc2012
 places365
 voc2007
 voc2012
 
 # etc
-*/data/*
 *.tar
 *.gz
 *.zip

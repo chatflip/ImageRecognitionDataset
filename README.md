@@ -4,7 +4,7 @@ ImageRecognitionDataset
 Caltech101/256, CIFAR-10/100, MNIST/FashionMNIST, omniglot
 
 ## Requirement
-python 2.x/3.x
+python 3.x
 
 ## Install
 ```
@@ -14,6 +14,6 @@ $ pip install pillow
 
 ## Usage
 ```
-$ cd caltech101
-$ bash scripts/start.sh
+$ python main.py CIFAR10
+$ python main.py MNIST 
 ```
