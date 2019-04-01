@@ -107,13 +107,11 @@ venv.bak/
 .DS_Store
 
 data
-CIFAR10
-CIFAR100
-MNIST
-fashionMNIST
-caltech101
-caltech256
-omniglot
+CIFAR10/cifar-10*
+CIFAR100/cifar-100*
+caltech101/101_*
+caltech256/256_*
+omniglot/images*
 ilsvrc2012
 places365
 voc2007
