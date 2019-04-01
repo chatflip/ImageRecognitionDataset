@@ -10,7 +10,7 @@ def conf():
     parser.add_argument('--raw_file_path', default='',
                         type=str, help='select dataset')
     parser.add_argument('--data_file_path', default='data',
-                        type=str, help='select dataset')
+                            type=str, help='select dataset')
     args = parser.parse_args()
     return args
 

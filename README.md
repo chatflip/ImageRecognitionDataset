@@ -14,6 +14,6 @@ $ pip install pillow
 
 ## Usage
 ```
-$ python main.py CIFAR10
-$ python main.py MNIST 
+$ python main.py {CIFAR10, CIFAR100, MNIST, fashionMNIST, caltech101, caltech256, omniglot}
+
 ```

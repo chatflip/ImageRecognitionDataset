@@ -16,8 +16,9 @@ class ExpansionDataset(object):
     def __init__(self, dataset_name, raw_path, data_path):
         print(dataset_name)
         self.dataset_name = dataset_name
-        self.raw_path = raw_path
-        self.data_path = data_path
+        self.raw_path = os.path.expanduser(raw_path)
+
+        self.data_path = os.path.expanduser(data_path)
         self.download_dict = get_url(self.dataset_name)
 
     def download(self):
@@ -167,7 +168,7 @@ def setup_cifar10(dataset_name, raw_path, data_path):
 
 
 def setup_cifar100(dataset_name, raw_path, data_path):
-    folder_name = "cifar-100-python"
+    folder_name = 'cifar-100-python'
     src_root = os.path.join(raw_path, folder_name)
     dst_root = os.path.join(data_path, dataset_name)
     meta_data = unpickle(os.path.join(src_root, 'meta'))
@@ -230,12 +231,12 @@ def setup_fashionmnist(dataset_name, raw_path, data_path):
 
 
 def symlink_caltech(dataset_name, data_path, folder_name):
-    root = os.getcwd()
+    data_path = os.path.abspath(data_path)
     if dataset_name == 'caltech101':
-        ignore_class = "BACKGROUND_Google"
+        ignore_class = 'BACKGROUND_Google'
     elif dataset_name == 'caltech256':
-        ignore_class = "257.clutter"
-    sym_root = '{}/{}/{}'.format(root, data_path, dataset_name)
+        ignore_class = '257.clutter'
+    sym_root = '{}/{}'.format(data_path, dataset_name)
     for num_subset in range(10):
         subset = 'subset{}'.format(num_subset)
         subset_root = os.path.join(sym_root, subset)
@@ -250,7 +251,7 @@ def symlink_caltech(dataset_name, data_path, folder_name):
             exist_mkdir(os.path.join(subset_root, 'train', class_name))
             exist_mkdir(os.path.join(subset_root, 'test', class_name))
         for phase in ('train', 'test'):
-            filenames = np.genfromtxt("{0}/csv/{0}_{1}_{2}.csv". format(
+            filenames = np.genfromtxt('{0}/csv/{0}_{1}_{2}.csv'. format(
                                       dataset_name, phase, subset),
                                       dtype=np.str)
             for fname in filenames:
@@ -298,9 +299,9 @@ def convert_omniglot(src, dst):
 
 
 def symlink_omniglot(dst_path, folder_name):
-    root = os.getcwd()
-    src_root = '{}/{}/{}'.format(root, dst_path, folder_name)
-    dst_root = '{}/{}/'.format(root, dst_path)
+    dst_path = os.path.abspath(dst_path)
+    src_root = '{}/{}'.format(dst_path, folder_name)
+    dst_root = '{}/'.format(dst_path)
     for num_subset in range(20):
         subset_root = '{}/subset{}/{}'.format(
                       dst_root, num_subset, folder_name)
