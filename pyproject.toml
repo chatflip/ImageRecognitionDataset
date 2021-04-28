@@ -7,6 +7,7 @@ authors = ["chatflip <oo.chat.flip@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.7"
 Pillow = "*"
+numpy = "*"
 
 [tool.poetry.dev-dependencies]
 pysen = "*"
