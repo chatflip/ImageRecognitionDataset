@@ -1,4 +1,4 @@
-from conf import args
+from args import conf
 from ImageDatasets import ExpansionDataset
 
 
