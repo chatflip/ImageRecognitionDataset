@@ -19,40 +19,32 @@ IMG_EXTENSIONS = (
 
 class CalculateMeanStd:
     def __init__(self, dataset, data_path):
-
         self.dataset = dataset
         self.data_path = os.path.expanduser(data_path)
 
     def caluculate(self):
-        image_paths = self.search_image_path()
+        image_paths, mode = self.search_image_path()
         mean = 0
         std = 0
         for image_path in tqdm(image_paths):
             image = Image.open(image_path)
             width, height = image.size
-            if image.mode == "RGB":
-                channel = 3
-            elif image.mode == "L" or image.mode == "1":
-                channel = 1
-            else:
-                print(f"image.mode: {image.mode}")
-                raise NotImplementedError
             data = np.asarray(image)
-            data = data.reshape(height * width, channel)
+            data = data.reshape(height * width, -1)
             mean += data.mean(0)
             std += data.std(0)
         mean /= len(image_paths)
         std /= len(image_paths)
         print(self.dataset)
-        if image.mode == "RGB":
+        if mode == "RGB":
             print(
                 f"mean R: {mean[0]:5.2f} G: {mean[1]:5.2f} B: {mean[2]:5.2f}\t"
                 f"std R: {std[0]:5.2f} G: {std[1]:5.2f} B: {std[2]:5.2f}\n"
                 f"mean R: {mean[0]/255:5.4f} G: {mean[1]/255:5.4f} B: {mean[2]/255:5.4f}\t"
                 f"std R: {std[0]/255:5.4f} G: {std[1]/255:5.4f} B: {std[2]/255:5.4f}"
             )
-        elif image.mode == "L" or image.mode == "1":
-            if image.mode == "1":
+        elif mode == "L" or mode == "1":
+            if mode == "1":
                 mean *= 255
                 std *= 255
             print(
@@ -69,7 +61,8 @@ class CalculateMeanStd:
                 image_path = os.path.join(class_root, filename)
                 if filename.lower().endswith(IMG_EXTENSIONS):
                     image_paths.append(image_path)
-        return image_paths
+        image = Image.open(image_paths[0])
+        return image_paths, image.mode
 
     def get_image_root(self):
         if (
