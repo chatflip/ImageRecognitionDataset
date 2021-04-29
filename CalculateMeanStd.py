@@ -1,15 +1,25 @@
-import os 
+import os
 
 import numpy as np
 from PIL import Image
 from tqdm import tqdm
 
+IMG_EXTENSIONS = (
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".ppm",
+    ".bmp",
+    ".pgm",
+    ".tif",
+    ".tiff",
+    ".webp",
+)
 
-IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp')
 
-class CalculateMeanStd():
+class CalculateMeanStd:
     def __init__(self, dataset, data_path):
-        
+
         self.dataset = dataset
         self.data_path = os.path.expanduser(data_path)
 
@@ -22,7 +32,7 @@ class CalculateMeanStd():
             width, height = image.size
             if image.mode == "RGB":
                 channel = 3
-            elif image.mode == "L" or image.mode == "1" :
+            elif image.mode == "L" or image.mode == "1":
                 channel = 1
             else:
                 print(f"image.mode: {image.mode}")
@@ -50,7 +60,6 @@ class CalculateMeanStd():
                 f"mean: {mean[0]/255:5.4f}\tstd : {std[0]/255:5.4f}"
             )
 
-
     def search_image_path(self):
         root = self.get_image_root()
         image_paths = []
@@ -62,9 +71,13 @@ class CalculateMeanStd():
                     image_paths.append(image_path)
         return image_paths
 
-
     def get_image_root(self):
-        if self.dataset == "CIFAR10" or self.dataset == "CIFAR100" or self.dataset == "MNIST" or self.dataset == "fashionMNIST":
+        if (
+            self.dataset == "CIFAR10"
+            or self.dataset == "CIFAR100"
+            or self.dataset == "MNIST"
+            or self.dataset == "fashionMNIST"
+        ):
             return os.path.join(self.data_path, self.dataset, "train")
         elif self.dataset == "caltech101":
             return os.path.join(self.data_path, self.dataset, "101_ObjectCategories")
@@ -74,4 +87,3 @@ class CalculateMeanStd():
             return os.path.join(self.data_path, self.dataset, "images_background")
         else:
             return self.data_path
-
