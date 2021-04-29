@@ -9,15 +9,17 @@ python 3.x
 ## Install
 ### pip
 ```bash
-$ pip install numpy
-$ pip install pillow
+$ pip install numpy pillow
 ```
 ### poetry
 ```bash
-poetry install
+$ poetry install
 ```
 
 ## Usage
 ```bash
-$ python main.py {CIFAR10, CIFAR100, MNIST, fashionMNIST, caltech101, caltech256, omniglot}
+# Dataset Download 
+$ python download.py --dataset {CIFAR10 | CIFAR100 | MNIST | fashionMNIST | caltech101 | caltech256 | omniglot}
+# Calculate Dataset Mean Std
+$ python calculate.py 
 ```
