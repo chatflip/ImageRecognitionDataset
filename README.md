@@ -40,13 +40,5 @@ $ python calculate.py --dataset {CIFAR10 | CIFAR100 | MNIST | fashionMNIST | cal
 | Caltech101(all images) | (0.5487, 0.5313, 0.5050) | (0.2497, 0.2467, 0.2483) |
 | Caltech256(all images) | (0.5520, 0.5336, 0.5050) | (0.2420, 0.2412, 0.2438) |
 
-<!-- 
-| ilsvrc2012(train) | (, , ) | (, , ) |
-| places365(train 256×256) | (, , ) | (, , ) |
-original resnet
-mean=[0.485, 0.456, 0.406],
-std=[0.229, 0.224, 0.225]
--->
-
 ## Link
 Mean and std calculations are based on　https://discuss.pytorch.org/t/about-normalization-using-pre-trained-vgg16-networks/23560/5
