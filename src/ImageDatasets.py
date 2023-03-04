@@ -18,12 +18,17 @@ from PIL import Image
 
 
 class ExpansionDataset:
-    """docstring for ClassName"""
-
     def __init__(
         self, dataset_name: str, raw_path: str, data_path: str, config_path: str
     ) -> None:
-        print(dataset_name)
+        """Instantiate an ExpansionDataset object.
+
+        Args:
+            dataset_name (str): Name of the dataset
+            raw_path (str): Raw data directory path
+            data_path (str): Processed data directory path
+            config_path (str): Path to the dataset configuration path
+        """
         self.dataset_name = dataset_name
         self.raw_path = os.path.expanduser(raw_path)
         self.data_path = os.path.expanduser(data_path)
@@ -32,19 +37,29 @@ class ExpansionDataset:
         self.download_dict = data[self.dataset_name]
 
     def download(self) -> None:
+        """Download files from the remote server."""
         for filename in [*self.download_dict["filenames"]]:
             download_file(self.download_dict["baseurl"], filename, self.raw_path)
 
     def decompress(self) -> None:
+        """Decompress files in the raw data directory."""
         print("Decompress: {}".format(self.dataset_name))
         for filename in [*self.download_dict["filenames"]]:
             decompress_file(filename, self.raw_path)
 
     def setup(self) -> None:
+        """Set up the processed data directory."""
         setup_file(self.dataset_name, self.raw_path, self.data_path)
 
 
 def progress(block_count: int, block_size: int, total_size: int) -> None:
+    """Report download progress.
+
+    Args:
+        block_count (int): The number of blocks transferred so far [int].
+        block_size (int): The size of each block in bytes [int].
+        total_size (int): The total size of the file in bytes [int].
+    """
     percentage = min(int(100.0 * block_count * block_size / total_size), 100)
     bar = "[{}>{}]".format("=" * (percentage // 4), " " * (25 - percentage // 4))
     sys.stdout.write("{} {:3d}%\r".format(bar, percentage))
@@ -52,6 +67,13 @@ def progress(block_count: int, block_size: int, total_size: int) -> None:
 
 
 def download_file(baseurl: str, filename: str, raw_path: str) -> None:
+    """Download a file from the remote server.
+
+    Args:
+        baseurl (str): The URL of the remote server
+        filename (str): The filename to download
+        raw_path (str): The directory to save the downloaded file
+    """
     if os.path.exists(os.path.join(raw_path, filename)):
         print("File exists: {}".format(filename))
     else:
@@ -75,6 +97,12 @@ def download_file(baseurl: str, filename: str, raw_path: str) -> None:
 
 
 def decompress_file(filename: str, raw_path: str) -> None:
+    """Decompress a file in the raw data directory.
+
+    Args:
+        filename (str): The name of the file to decompress
+        raw_path (str): The path of the raw data directory
+    """
     if ".tar.gz" in filename:
         with tarfile.open(os.path.join(raw_path, filename), "r:gz") as tr:
             tr.extractall(os.path.join(raw_path, ""))
@@ -87,6 +115,13 @@ def decompress_file(filename: str, raw_path: str) -> None:
 
 
 def setup_file(dataset_name: str, raw_path: str, data_path: str) -> None:
+    """Create necessary directories and setup dataset for specified dataset_name.
+
+    Args:
+        dataset_name (str): Name of the dataset to be setup.
+        raw_path (str): Path to the directory containing raw dataset files.
+        data_path (str): Path to the directory where the dataset will be stored.
+    """
     os.makedirs(os.path.join(data_path, dataset_name), exist_ok=True)
     if dataset_name == "CIFAR10":
         setup_cifar10(dataset_name, raw_path, data_path)
@@ -105,6 +140,14 @@ def setup_file(dataset_name: str, raw_path: str, data_path: str) -> None:
 
 
 def unpickle(file: str) -> Any:
+    """Read and unpickle the specified file.
+
+    Args:
+        file (str): Path to the file to be unpickled.
+
+    Returns:
+        Any: The unpickled object from the specified file.
+    """
     with open(file, "rb") as f:
         pic = pickle.load(f, encoding="latin1")
     return pic
@@ -113,6 +156,14 @@ def unpickle(file: str) -> Any:
 def data2img_cifar(
     dataset_name: str, src: str, dst: str, class_names: list[str]
 ) -> None:
+    """Convert CIFAR dataset files to images and store in the specified directory.
+
+    Args:
+        dataset_name (str): Name of the dataset to be converted.
+        src (str): Path to the directory containing the dataset files.
+        dst (str): Path to the directory where the images will be stored.
+        class_names (list[str]): List of class names for the dataset.
+    """
     pickles = unpickle(src)
     datas = pickles["data"]
     if dataset_name == "CIFAR10":
@@ -127,6 +178,13 @@ def data2img_cifar(
 
 
 def setup_cifar10(dataset_name: str, raw_path: str, data_path: str) -> None:
+    """Setup the CIFAR-10 dataset.
+
+    Args:
+        dataset_name (str): Name of the dataset to be setup.
+        raw_path (str): Path to the directory containing raw dataset files.
+        data_path (str): Path to the directory where the dataset will be stored.
+    """
     folder_name = "cifar-10-batches-py"
     src_root = os.path.join(raw_path, folder_name)
     dst_root = os.path.join(data_path, dataset_name)
@@ -151,6 +209,13 @@ def setup_cifar10(dataset_name: str, raw_path: str, data_path: str) -> None:
 
 
 def setup_cifar100(dataset_name: str, raw_path: str, data_path: str) -> None:
+    """Setup the CIFAR-100 dataset.
+
+    Args:
+        dataset_name (str): Name of the dataset to be setup.
+        raw_path (str): Path to the directory containing raw dataset files.
+        data_path (str): Path to the directory where the dataset will be stored.
+    """
     folder_name = "cifar-100-python"
     src_root = os.path.join(raw_path, folder_name)
     dst_root = os.path.join(data_path, dataset_name)
@@ -178,6 +243,13 @@ def setup_cifar100(dataset_name: str, raw_path: str, data_path: str) -> None:
 
 
 def data2img_mnist(src: str, dst: str, phase: str) -> None:
+    """Extracts image data from MNIST dataset and saves as PNG images in a directory tree.
+
+    Args:
+        src (str): The directory path of MNIST dataset.
+        dst (str): The directory path to save extracted images.
+        phase (str): The name of the dataset subset to extract, either "train" or "test".
+    """
     if phase == "train":
         prefix = "train"
     elif phase == "test":
@@ -199,6 +271,13 @@ def data2img_mnist(src: str, dst: str, phase: str) -> None:
 
 
 def setup_mnist(dataset_name: str, raw_path: str, data_path: str) -> None:
+    """Sets up MNIST dataset by extracting the image data and saving it as PNG images.
+
+    Args:
+        dataset_name (str): The name of the dataset to set up, i.e. "mnist".
+        raw_path (str): The directory path of the raw data.
+        data_path (str): The directory path to save the processed data.
+    """
     # Extract train files
     print("Extract train files")
     dst_root = os.path.join(data_path, dataset_name)
@@ -209,6 +288,13 @@ def setup_mnist(dataset_name: str, raw_path: str, data_path: str) -> None:
 
 
 def setup_fashionmnist(dataset_name: str, raw_path: str, data_path: str) -> None:
+    """Sets up Fashion-MNIST dataset by extracting the image data and saving it as PNG images.
+
+    Args:
+        dataset_name (str): The name of the dataset to set up, i.e. "fashionmnist".
+        raw_path (str): The directory path of the raw data.
+        data_path (str): The directory path to save the processed data.
+    """
     # Extract train files
     print("Extract train files")
     dst_root = os.path.join(data_path, dataset_name)
@@ -219,6 +305,13 @@ def setup_fashionmnist(dataset_name: str, raw_path: str, data_path: str) -> None
 
 
 def symlink_caltech(dataset_name: str, data_path: str, folder_name: str) -> None:
+    """Creates symbolic links for Caltech dataset.
+
+    Args:
+        dataset_name (str): The name of the Caltech dataset to set up, either "caltech101" or "caltech256".
+        data_path (str): The directory path to save the processed data.
+        folder_name (str): The name of the folder containing the raw data.
+    """
     data_path = os.path.abspath(data_path)
     if dataset_name == "caltech101":
         ignore_class = "BACKGROUND_Google"
@@ -251,6 +344,14 @@ def symlink_caltech(dataset_name: str, data_path: str, folder_name: str) -> None
 
 
 def setup_caltech101(dataset_name: str, raw_path: str, data_path: str) -> None:
+    """Sets up Caltech 101 dataset by copying the raw data and creating symbolic links.
+
+
+    Args:
+        dataset_name (str): The name of the Caltech dataset to set up, i.e. "caltech101".
+        raw_path (str): The directory path of the raw data.
+        data_path (str): The directory path to save the processed data.
+    """
     folder_name = "101_ObjectCategories"
     # copy 101_ObjectCategories
     cp_src = os.path.join(raw_path, folder_name)
@@ -261,6 +362,13 @@ def setup_caltech101(dataset_name: str, raw_path: str, data_path: str) -> None:
 
 
 def setup_caltech256(dataset_name: str, raw_path: str, data_path: str) -> None:
+    """Sets up Caltech 256 dataset by copying the raw data and creating symbolic links.
+
+    Args:
+        dataset_name (str): The name of the Caltech dataset to set up, i.e. "caltech256".
+        raw_path (str): The directory path of the raw data.
+        data_path (str): The directory path to save the processed data.
+    """
     folder_name = "256_ObjectCategories"
     # copy 256_ObjectCategories
     cp_src = os.path.join(raw_path, folder_name)
@@ -271,6 +379,12 @@ def setup_caltech256(dataset_name: str, raw_path: str, data_path: str) -> None:
 
 
 def convert_omniglot(src: str, dst: str) -> None:
+    """Converts Omniglot dataset to the format suitable for few-shot learning.
+
+    Args:
+        src (str): The directory path to the Omniglot dataset.
+        dst (str): The directory path where the converted dataset will be saved.
+    """
     num2class = {}  # type: ignore
     os.makedirs(dst, exist_ok=True)
     for root, dirs, file_names in os.walk(src):
@@ -289,6 +403,12 @@ def convert_omniglot(src: str, dst: str) -> None:
 
 
 def symlink_omniglot(dst_path: str, folder_name: str) -> None:
+    """Creates symlinks for Omniglot dataset.
+
+    Args:
+        dst_path (str): The directory path where the Omniglot dataset is saved.
+        folder_name (str): The name of the folder to be symlinked.
+    """
     dst_path = os.path.abspath(dst_path)
     src_root = "{}/{}".format(dst_path, folder_name)
     dst_root = "{}/".format(dst_path)
@@ -316,6 +436,13 @@ def symlink_omniglot(dst_path: str, folder_name: str) -> None:
 
 
 def setup_omniglot(dataset_name: str, raw_path: str, data_path: str) -> None:
+    """Prepares Omniglot dataset for few-shot learning by converting and symlinking.
+
+    Args:
+        dataset_name (str): The name of the dataset to be prepared.
+        raw_path (str): The directory path where the original Omniglot dataset is stored.
+        data_path (str): The directory path where the converted and symlinked dataset will be saved.
+    """
     for folder_name in ("images_background", "images_evaluation"):
         src_path = os.path.join(raw_path, folder_name)
         dst_path = os.path.join(data_path, dataset_name)
@@ -324,6 +451,11 @@ def setup_omniglot(dataset_name: str, raw_path: str, data_path: str) -> None:
 
 
 def caltech101_list() -> None:
+    """
+    Creates train and test split for Caltech-101 dataset.
+    Splits the dataset into 10 subsets and saves a list of file paths for train and test splits
+    of each subset in CSV format.
+    """
     random.seed(0)
     src_root = "caltech101/101_ObjectCategories"
     class_names = os.listdir(src_root)
@@ -359,6 +491,11 @@ def caltech101_list() -> None:
 
 
 def caltech256_list() -> None:
+    """
+    Creates train and test split for Caltech-256 dataset.
+    Splits the dataset into 10 subsets and saves a list of file paths for train and test splits
+    of each subset in CSV format.
+    """
     random.seed(0)
     src_root = "caltech256/256_ObjectCategories"
     class_names = os.listdir(src_root)
