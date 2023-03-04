@@ -7,7 +7,9 @@ from ImageDatasets import ExpansionDataset
 def main(args: argparse.Namespace) -> None:
     if not args.raw_file_path:
         args.raw_file_path = args.dataset
-    worker = ExpansionDataset(args.dataset, args.raw_file_path, args.data_file_path)
+    worker = ExpansionDataset(
+        args.dataset, args.raw_file_path, args.data_file_path, args.config_path
+    )
     # Download files
     worker.download()
     # Extract unzip files

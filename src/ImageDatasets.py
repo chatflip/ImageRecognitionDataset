@@ -13,23 +13,27 @@ import zipfile
 from typing import Any
 
 import numpy as np
+import yaml
 from PIL import Image
 
 
 class ExpansionDataset:
     """docstring for ClassName"""
 
-    def __init__(self, dataset_name: str, raw_path: str, data_path: str) -> None:
+    def __init__(
+        self, dataset_name: str, raw_path: str, data_path: str, config_path: str
+    ) -> None:
         print(dataset_name)
         self.dataset_name = dataset_name
         self.raw_path = os.path.expanduser(raw_path)
-
         self.data_path = os.path.expanduser(data_path)
-        self.download_dict = get_url(self.dataset_name)
+        with open(config_path) as cfg:
+            data = yaml.safe_load(cfg)
+        self.download_dict = data[self.dataset_name]
 
     def download(self) -> None:
         for filename in [*self.download_dict["filenames"]]:
-            download_file(self.download_dict["baseurl"], filename, self.raw_path)  # type: ignore
+            download_file(self.download_dict["baseurl"], filename, self.raw_path)
 
     def decompress(self) -> None:
         print("Decompress: {}".format(self.dataset_name))
@@ -38,51 +42,6 @@ class ExpansionDataset:
 
     def setup(self) -> None:
         setup_file(self.dataset_name, self.raw_path, self.data_path)
-
-
-def get_url(dataset_name: str) -> dict[str, str | list[str]]:
-    data = {
-        "CIFAR10": {
-            "baseurl": "https://www.cs.toronto.edu/~kriz/",
-            "filenames": ["cifar-10-python.tar.gz"],
-        },
-        "CIFAR100": {
-            "baseurl": "https://www.cs.toronto.edu/~kriz/",
-            "filenames": ["cifar-100-python.tar.gz"],
-        },
-        "MNIST": {
-            "baseurl": "http://yann.lecun.com/exdb/mnist/",
-            "filenames": [
-                "train-images-idx3-ubyte.gz",
-                "train-labels-idx1-ubyte.gz",
-                "t10k-images-idx3-ubyte.gz",
-                "t10k-labels-idx1-ubyte.gz",
-            ],
-        },
-        "fashionMNIST": {
-            "baseurl": "http://fashion-mnist.s3-website." "eu-central-1.amazonaws.com/",
-            "filenames": [
-                "train-images-idx3-ubyte.gz",
-                "train-labels-idx1-ubyte.gz",
-                "t10k-images-idx3-ubyte.gz",
-                "t10k-labels-idx1-ubyte.gz",
-            ],
-        },
-        "caltech101": {
-            "baseurl": "http://www.vision.caltech.edu/" "Image_Datasets/Caltech101/",
-            "filenames": ["101_ObjectCategories.tar.gz"],
-        },
-        "caltech256": {
-            "baseurl": "http://www.vision.caltech.edu/" "Image_Datasets/Caltech256/",
-            "filenames": ["256_ObjectCategories.tar"],
-        },
-        "omniglot": {
-            "baseurl": "https://raw.githubusercontent.com/"
-            "brendenlake/omniglot/master/python/",
-            "filenames": ["images_background.zip", "images_evaluation.zip"],
-        },
-    }
-    return data[dataset_name]
 
 
 def progress(block_count: int, block_size: int, total_size: int) -> None:
