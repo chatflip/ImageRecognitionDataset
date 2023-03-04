@@ -6,8 +6,8 @@ authors = ["chatflip <oo.chat.flip@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-Pillow = "*"
-numpy = ">=1.24.0"
+Pillow = ">=9.0.1"
+numpy = ">=1.24"
 tqdm = "*"
 
 [tool.poetry.dev-dependencies]
