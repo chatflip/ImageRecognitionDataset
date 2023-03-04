@@ -5,33 +5,68 @@ description = ""
 authors = ["chatflip <oo.chat.flip@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-Pillow = "*"
-numpy = "*"
+python = "^3.8"
+Pillow = ">=9.0.1"
+numpy = ">=1.24"
 tqdm = "*"
+PyYAML = "*"
+types-pyyaml = "*"
 
 [tool.poetry.dev-dependencies]
-pysen = "*"
-black = "^20.8b1"
-flake8 = "*"
-isort = "*"
-autopep8 = "*"
+pysen = "^0.10"
+black = "21.10b0"
+flake8 = "4.0.1"
+isort = "5.10.1"
+mypy = "0.910"
+click = "8.0.2"
 
 [tool.pysen]
-version = "0.9"
+version = "0.10"
 
 [tool.pysen.lint]
 enable_black = true
 enable_flake8 = true
 enable_isort = true
-enable_mypy = false
-mypy_preset = "strict"
+enable_mypy = true
+mypy_preset = "very_strict"
 line_length = 88
-py_version = "py37"
+py_version = "py39"
+[[tool.pysen.lint.mypy_targets]]
+paths = ["src/"]
 
 [tool.pysen.lint.source]
-  includes = ["."]
+include_globs = ["src/**/*.py"]
+
+[tool.isort]
+target-version = ["py39"]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = 3.9
+# following setting is same as pysen
+# https://github.com/pfnet/pysen/blob/main/setup.cfg#L12
+check_untyped_defs = true
+disallow_any_decorated = false
+disallow_any_generics = false
+disallow_any_unimported = false
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = false
+disallow_untyped_defs = true
+ignore_errors = false
+ignore_missing_imports = true
+no_implicit_optional = true
+show_error_codes = true
+strict_equality = true
+strict_optional = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

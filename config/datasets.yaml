@@ -1,0 +1,21 @@
+CIFAR10:
+  baseurl: "https://www.cs.toronto.edu/~kriz/"
+  filenames: ["cifar-10-python.tar.gz"]
+CIFAR100:
+  baseurl: "https://www.cs.toronto.edu/~kriz/"
+  filenames: ["cifar-100-python.tar.gz"]
+MNIST:
+  baseurl: "http://yann.lecun.com/exdb/mnist/"
+  filenames: ["train-images-idx3-ubyte.gz", "train-labels-idx1-ubyte.gz", "t10k-images-idx3-ubyte.gz", "t10k-labels-idx1-ubyte.gz"]
+fashionMNIST:
+  baseurl: "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/"
+  filenames: ["train-images-idx3-ubyte.gz", "train-labels-idx1-ubyte.gz", "t10k-images-idx3-ubyte.gz", "t10k-labels-idx1-ubyte.gz"]
+caltech101:
+  baseurl: "http://www.vision.caltech.edu/Image_Datasets/Caltech101/"
+  filenames: ["101_ObjectCategories.tar.gz"]
+caltech256:
+  baseurl: "http://www.vision.caltech.edu/Image_Datasets/Caltech256/"
+  filenames: ["256_ObjectCategories.tar"]
+omniglot:
+  baseurl: "https://raw.githubusercontent.com/brendenlake/omniglot/master/python/"
+  filenames:  ["images_background.zip", "images_evaluation.zip"]
