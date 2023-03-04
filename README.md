@@ -4,7 +4,7 @@ Caltech101/256, CIFAR-10/100, MNIST/FashionMNIST, omniglot
 
 ## Requirement
 
-- Python >= 3.7
+- Python >= 3.8
 - Poetry >= 1.2
 
 ## Install

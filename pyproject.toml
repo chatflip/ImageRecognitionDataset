@@ -5,7 +5,7 @@ description = ""
 authors = ["chatflip <oo.chat.flip@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 Pillow = "*"
 numpy = ">=1.24.0"
 tqdm = "*"
