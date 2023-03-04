@@ -117,7 +117,7 @@ def decompress_file(filename, raw_path):
 
 
 def setup_file(dataset_name, raw_path, data_path):
-    exist_mkdir(os.path.join(data_path, dataset_name))
+    os.makedirs(os.path.join(data_path, dataset_name), exist_ok=True)
     if dataset_name == "CIFAR10":
         setup_cifar10(dataset_name, raw_path, data_path)
     elif dataset_name == "CIFAR100":
@@ -132,11 +132,6 @@ def setup_file(dataset_name, raw_path, data_path):
         setup_caltech256(dataset_name, raw_path, data_path)
     elif dataset_name == "omniglot":
         setup_omniglot(dataset_name, raw_path, data_path)
-
-
-def exist_mkdir(path):
-    if not os.path.exists(path):
-        os.makedirs(path)
 
 
 def unpickle(file):
@@ -165,11 +160,11 @@ def setup_cifar10(dataset_name, raw_path, data_path):
     dst_root = os.path.join(data_path, dataset_name)
     meta_data = unpickle(os.path.join(src_root, "batches.meta"))
     class_names = meta_data["label_names"]
-    exist_mkdir(os.path.join(dst_root, "train"))
-    exist_mkdir(os.path.join(dst_root, "test"))
+    os.makedirs(os.path.join(dst_root, "train"), exist_ok=True)
+    os.makedirs(os.path.join(dst_root, "test"), exist_ok=True)
     for class_name in class_names:
-        exist_mkdir(os.path.join(dst_root, "train", class_name))
-        exist_mkdir(os.path.join(dst_root, "test", class_name))
+        os.makedirs(os.path.join(dst_root, "train", class_name), exist_ok=True)
+        os.makedirs(os.path.join(dst_root, "test", class_name), exist_ok=True)
     # Extract train files
     print("Extract train files")
     for num_subset in range(1, 6):
@@ -189,11 +184,15 @@ def setup_cifar100(dataset_name, raw_path, data_path):
     dst_root = os.path.join(data_path, dataset_name)
     meta_data = unpickle(os.path.join(src_root, "meta"))
     class_names = meta_data["fine_label_names"]
-    exist_mkdir(os.path.join(data_path, dataset_name, "train"))
-    exist_mkdir(os.path.join(data_path, dataset_name, "test"))
+    os.makedirs(os.path.join(data_path, dataset_name, "train"), exist_ok=True)
+    os.makedirs(os.path.join(data_path, dataset_name, "test"), exist_ok=True)
     for class_name in class_names:
-        exist_mkdir(os.path.join(data_path, dataset_name, "train", class_name))
-        exist_mkdir(os.path.join(data_path, dataset_name, "test", class_name))
+        os.makedirs(
+            os.path.join(data_path, dataset_name, "train", class_name), exist_ok=True
+        )
+        os.makedirs(
+            os.path.join(data_path, dataset_name, "test", class_name), exist_ok=True
+        )
     # Extract train files
     print("Extract train files")
     src_path = "{}/train".format(src_root)
@@ -220,7 +219,7 @@ def data2img_mnist(src, dst, phase):
         )
         count = 0
         for img, label in zip(imgs, labels):
-            exist_mkdir(os.path.join(dst, phase, str(label)))
+            os.makedirs(os.path.join(dst, phase, str(label)), exist_ok=True)
             img = np.reshape(img, (28, 28)).astype(np.uint8)
             pilimg = Image.fromarray(img)
             pilimg.save("{}/{}/{}/{:05d}.png".format(dst, phase, label, count))
@@ -257,16 +256,15 @@ def symlink_caltech(dataset_name, data_path, folder_name):
     for num_subset in range(10):
         subset = "subset{}".format(num_subset)
         subset_root = os.path.join(sym_root, subset)
-        exist_mkdir(subset_root)
-        exist_mkdir(os.path.join(subset_root, "train"))
-        exist_mkdir(os.path.join(subset_root, "test"))
+        os.makedirs(os.path.join(subset_root, "train"), exist_ok=True)
+        os.makedirs(os.path.join(subset_root, "test"), exist_ok=True)
         class_names = os.listdir(os.path.join(sym_root, folder_name))
         class_names.sort()
         for class_name in class_names:
             if ignore_class in class_name:
                 continue
-            exist_mkdir(os.path.join(subset_root, "train", class_name))
-            exist_mkdir(os.path.join(subset_root, "test", class_name))
+            os.makedirs(os.path.join(subset_root, "train", class_name), exist_ok=True)
+            os.makedirs(os.path.join(subset_root, "test", class_name), exist_ok=True)
         for phase in ("train", "test"):
             filenames = np.genfromtxt(
                 "{0}/csv/{0}_{1}_{2}.csv".format(dataset_name, phase, subset),
@@ -302,7 +300,7 @@ def setup_caltech256(dataset_name, raw_path, data_path):
 
 def convert_omniglot(src, dst):
     num2class = {}
-    exist_mkdir(dst)
+    os.makedirs(dst, exist_ok=True)
     for root, dirs, file_names in os.walk(src):
         if len(dirs) == 0:
             tmp = file_names[0]
@@ -311,7 +309,7 @@ def convert_omniglot(src, dst):
     for key, value in num2class.items():
         _, _, class_name, subclass_name = value.split("/")
         dst_path = "{}/{:04d}_{}_{}".format(dst, key, class_name, subclass_name)
-        exist_mkdir(dst_path)
+        os.makedirs(dst_path, exist_ok=True)
         for file_name in os.listdir(value):
             shutil.copy(
                 os.path.join(value, file_name), os.path.join(dst_path, file_name)
@@ -324,14 +322,13 @@ def symlink_omniglot(dst_path, folder_name):
     dst_root = "{}/".format(dst_path)
     for num_subset in range(20):
         subset_root = "{}/subset{}/{}".format(dst_root, num_subset, folder_name)
-        exist_mkdir(subset_root)
-        exist_mkdir(os.path.join(subset_root, "train"))
-        exist_mkdir(os.path.join(subset_root, "test"))
+        os.makedirs(os.path.join(subset_root, "train"), exist_ok=True)
+        os.makedirs(os.path.join(subset_root, "test"), exist_ok=True)
         class_names = os.listdir(src_root)
         class_names.sort()
         for class_name in class_names:
-            exist_mkdir(os.path.join(subset_root, "train", class_name))
-            exist_mkdir(os.path.join(subset_root, "test", class_name))
+            os.makedirs(os.path.join(subset_root, "train", class_name), exist_ok=True)
+            os.makedirs(os.path.join(subset_root, "test", class_name), exist_ok=True)
             file_names = os.listdir(os.path.join(src_root, class_name))
             for file_name in file_names:
                 if "{:02d}.png".format(num_subset + 1) in file_name:
