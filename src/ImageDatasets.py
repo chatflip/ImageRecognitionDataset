@@ -1,20 +1,25 @@
+from __future__ import annotations
+
 import gzip
 import os
 import pickle
+import random
 import shutil
+import ssl
 import sys
 import tarfile
 import urllib.request
 import zipfile
+from typing import Any
 
 import numpy as np
 from PIL import Image
 
 
-class ExpansionDataset(object):
+class ExpansionDataset:
     """docstring for ClassName"""
 
-    def __init__(self, dataset_name, raw_path, data_path):
+    def __init__(self, dataset_name: str, raw_path: str, data_path: str) -> None:
         print(dataset_name)
         self.dataset_name = dataset_name
         self.raw_path = os.path.expanduser(raw_path)
@@ -22,20 +27,20 @@ class ExpansionDataset(object):
         self.data_path = os.path.expanduser(data_path)
         self.download_dict = get_url(self.dataset_name)
 
-    def download(self):
+    def download(self) -> None:
         for filename in [*self.download_dict["filenames"]]:
-            download_file(self.download_dict["baseurl"], filename, self.raw_path)
+            download_file(self.download_dict["baseurl"], filename, self.raw_path)  # type: ignore
 
-    def decompress(self):
+    def decompress(self) -> None:
         print("Decompress: {}".format(self.dataset_name))
         for filename in [*self.download_dict["filenames"]]:
             decompress_file(filename, self.raw_path)
 
-    def setup(self):
+    def setup(self) -> None:
         setup_file(self.dataset_name, self.raw_path, self.data_path)
 
 
-def get_url(dataset_name):
+def get_url(dataset_name: str) -> dict[str, str | list[str]]:
     data = {
         "CIFAR10": {
             "baseurl": "https://www.cs.toronto.edu/~kriz/",
@@ -80,14 +85,14 @@ def get_url(dataset_name):
     return data[dataset_name]
 
 
-def progress(block_count, block_size, total_size):
+def progress(block_count: int, block_size: int, total_size: int) -> None:
     percentage = min(int(100.0 * block_count * block_size / total_size), 100)
     bar = "[{}>{}]".format("=" * (percentage // 4), " " * (25 - percentage // 4))
     sys.stdout.write("{} {:3d}%\r".format(bar, percentage))
     sys.stdout.flush()
 
 
-def download_file(baseurl, filename, raw_path):
+def download_file(baseurl: str, filename: str, raw_path: str) -> None:
     if os.path.exists(os.path.join(raw_path, filename)):
         print("File exists: {}".format(filename))
     else:
@@ -99,12 +104,18 @@ def download_file(baseurl, filename, raw_path):
                 reporthook=progress,
             )
             print("")
-        except (OSError, urllib.error.HTTPError) as err:
-            print("ERROR :{}".format(err.code))
-            print(err.reason)
+        except urllib.error.URLError as e:
+            print(f"OSError :{e.reason}")
+            print("Retry with ssl._create_unverified_context")
+            ssl._create_default_https_context = ssl._create_unverified_context
+            urllib.request.urlretrieve(
+                url=baseurl + filename,
+                filename=os.path.join(raw_path, filename),
+                reporthook=progress,
+            )
 
 
-def decompress_file(filename, raw_path):
+def decompress_file(filename: str, raw_path: str) -> None:
     if ".tar.gz" in filename:
         with tarfile.open(os.path.join(raw_path, filename), "r:gz") as tr:
             tr.extractall(os.path.join(raw_path, ""))
@@ -116,7 +127,7 @@ def decompress_file(filename, raw_path):
             z.extractall(os.path.join(raw_path, ""))
 
 
-def setup_file(dataset_name, raw_path, data_path):
+def setup_file(dataset_name: str, raw_path: str, data_path: str) -> None:
     os.makedirs(os.path.join(data_path, dataset_name), exist_ok=True)
     if dataset_name == "CIFAR10":
         setup_cifar10(dataset_name, raw_path, data_path)
@@ -134,13 +145,15 @@ def setup_file(dataset_name, raw_path, data_path):
         setup_omniglot(dataset_name, raw_path, data_path)
 
 
-def unpickle(file):
+def unpickle(file: str) -> Any:
     with open(file, "rb") as f:
         pic = pickle.load(f, encoding="latin1")
     return pic
 
 
-def data2img_cifar(dataset_name, src, dst, class_names):
+def data2img_cifar(
+    dataset_name: str, src: str, dst: str, class_names: list[str]
+) -> None:
     pickles = unpickle(src)
     datas = pickles["data"]
     if dataset_name == "CIFAR10":
@@ -154,7 +167,7 @@ def data2img_cifar(dataset_name, src, dst, class_names):
         pilimg.save(os.path.join(dst, class_names[label], filename))
 
 
-def setup_cifar10(dataset_name, raw_path, data_path):
+def setup_cifar10(dataset_name: str, raw_path: str, data_path: str) -> None:
     folder_name = "cifar-10-batches-py"
     src_root = os.path.join(raw_path, folder_name)
     dst_root = os.path.join(data_path, dataset_name)
@@ -178,7 +191,7 @@ def setup_cifar10(dataset_name, raw_path, data_path):
     data2img_cifar(dataset_name, src_path, dst_path, class_names)
 
 
-def setup_cifar100(dataset_name, raw_path, data_path):
+def setup_cifar100(dataset_name: str, raw_path: str, data_path: str) -> None:
     folder_name = "cifar-100-python"
     src_root = os.path.join(raw_path, folder_name)
     dst_root = os.path.join(data_path, dataset_name)
@@ -205,7 +218,7 @@ def setup_cifar100(dataset_name, raw_path, data_path):
     data2img_cifar(dataset_name, src_path, dst_path, class_names)
 
 
-def data2img_mnist(src, dst, phase):
+def data2img_mnist(src: str, dst: str, phase: str) -> None:
     if phase == "train":
         prefix = "train"
     elif phase == "test":
@@ -220,13 +233,13 @@ def data2img_mnist(src, dst, phase):
         count = 0
         for img, label in zip(imgs, labels):
             os.makedirs(os.path.join(dst, phase, str(label)), exist_ok=True)
-            img = np.reshape(img, (28, 28)).astype(np.uint8)
+            img = np.reshape(img, (28, 28)).astype(np.uint8)  # type: ignore
             pilimg = Image.fromarray(img)
             pilimg.save("{}/{}/{}/{:05d}.png".format(dst, phase, label, count))
             count += 1
 
 
-def setup_mnist(dataset_name, raw_path, data_path):
+def setup_mnist(dataset_name: str, raw_path: str, data_path: str) -> None:
     # Extract train files
     print("Extract train files")
     dst_root = os.path.join(data_path, dataset_name)
@@ -236,7 +249,7 @@ def setup_mnist(dataset_name, raw_path, data_path):
     data2img_mnist(os.path.join(raw_path, ""), dst_root, "test")
 
 
-def setup_fashionmnist(dataset_name, raw_path, data_path):
+def setup_fashionmnist(dataset_name: str, raw_path: str, data_path: str) -> None:
     # Extract train files
     print("Extract train files")
     dst_root = os.path.join(data_path, dataset_name)
@@ -246,7 +259,7 @@ def setup_fashionmnist(dataset_name, raw_path, data_path):
     data2img_mnist(os.path.join(raw_path, ""), dst_root, "test")
 
 
-def symlink_caltech(dataset_name, data_path, folder_name):
+def symlink_caltech(dataset_name: str, data_path: str, folder_name: str) -> None:
     data_path = os.path.abspath(data_path)
     if dataset_name == "caltech101":
         ignore_class = "BACKGROUND_Google"
@@ -268,7 +281,7 @@ def symlink_caltech(dataset_name, data_path, folder_name):
         for phase in ("train", "test"):
             filenames = np.genfromtxt(
                 "{0}/csv/{0}_{1}_{2}.csv".format(dataset_name, phase, subset),
-                dtype=np.str,
+                dtype=str,
             )
             for fname in filenames:
                 if not os.path.exists(os.path.join(subset_root, phase, fname)):
@@ -278,7 +291,7 @@ def symlink_caltech(dataset_name, data_path, folder_name):
                     )
 
 
-def setup_caltech101(dataset_name, raw_path, data_path):
+def setup_caltech101(dataset_name: str, raw_path: str, data_path: str) -> None:
     folder_name = "101_ObjectCategories"
     # copy 101_ObjectCategories
     cp_src = os.path.join(raw_path, folder_name)
@@ -288,7 +301,7 @@ def setup_caltech101(dataset_name, raw_path, data_path):
     symlink_caltech(dataset_name, data_path, folder_name)
 
 
-def setup_caltech256(dataset_name, raw_path, data_path):
+def setup_caltech256(dataset_name: str, raw_path: str, data_path: str) -> None:
     folder_name = "256_ObjectCategories"
     # copy 256_ObjectCategories
     cp_src = os.path.join(raw_path, folder_name)
@@ -298,8 +311,8 @@ def setup_caltech256(dataset_name, raw_path, data_path):
     symlink_caltech(dataset_name, data_path, folder_name)
 
 
-def convert_omniglot(src, dst):
-    num2class = {}
+def convert_omniglot(src: str, dst: str) -> None:
+    num2class = {}  # type: ignore
     os.makedirs(dst, exist_ok=True)
     for root, dirs, file_names in os.walk(src):
         if len(dirs) == 0:
@@ -316,7 +329,7 @@ def convert_omniglot(src, dst):
             )
 
 
-def symlink_omniglot(dst_path, folder_name):
+def symlink_omniglot(dst_path: str, folder_name: str) -> None:
     dst_path = os.path.abspath(dst_path)
     src_root = "{}/{}".format(dst_path, folder_name)
     dst_root = "{}/".format(dst_path)
@@ -343,7 +356,7 @@ def symlink_omniglot(dst_path, folder_name):
                     )
 
 
-def setup_omniglot(dataset_name, raw_path, data_path):
+def setup_omniglot(dataset_name: str, raw_path: str, data_path: str) -> None:
     for folder_name in ("images_background", "images_evaluation"):
         src_path = os.path.join(raw_path, folder_name)
         dst_path = os.path.join(data_path, dataset_name)
@@ -351,9 +364,7 @@ def setup_omniglot(dataset_name, raw_path, data_path):
         symlink_omniglot(dst_path, folder_name)
 
 
-def caltech101_list():
-    import random
-
+def caltech101_list() -> None:
     random.seed(0)
     src_root = "caltech101/101_ObjectCategories"
     class_names = os.listdir(src_root)
@@ -388,9 +399,7 @@ def caltech101_list():
         )
 
 
-def caltech256_list():
-    import random
-
+def caltech256_list() -> None:
     random.seed(0)
     src_root = "caltech256/256_ObjectCategories"
     class_names = os.listdir(src_root)

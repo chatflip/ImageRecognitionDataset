@@ -1,7 +1,7 @@
 import argparse
 
 
-def conf():
+def conf() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Image Recognition Dataset")
     parser.add_argument("--dataset", default="CIFAR10", type=str, help="select dataset")
     parser.add_argument("--raw_file_path", default="", type=str, help="select dataset")

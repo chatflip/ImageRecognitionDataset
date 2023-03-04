@@ -1,8 +1,10 @@
+import argparse
+
 from args import conf
 from ImageDatasets import ExpansionDataset
 
 
-def main(args):
+def main(args: argparse.Namespace) -> None:
     if not args.raw_file_path:
         args.raw_file_path = args.dataset
     worker = ExpansionDataset(args.dataset, args.raw_file_path, args.data_file_path)

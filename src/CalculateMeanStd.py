@@ -18,14 +18,14 @@ IMG_EXTENSIONS = (
 
 
 class CalculateMeanStd:
-    def __init__(self, dataset, data_path):
+    def __init__(self, dataset: str, data_path: str) -> None:
         self.dataset = dataset
         self.data_path = os.path.expanduser(data_path)
 
-    def caluculate(self):
+    def caluculate(self) -> None:
         image_paths, mode = self.search_image_path()
-        mean = 0
-        std = 0
+        mean = np.zeros((3))
+        std = np.zeros((3))
         for image_path in tqdm(image_paths):
             image = Image.open(image_path)
             width, height = image.size
@@ -52,7 +52,7 @@ class CalculateMeanStd:
                 f"mean: {mean[0]/255:5.4f}\tstd : {std[0]/255:5.4f}"
             )
 
-    def search_image_path(self):
+    def search_image_path(self) -> tuple[list[str], str]:
         root = self.get_image_root()
         image_paths = []
         for classname in os.listdir(root):
@@ -64,7 +64,7 @@ class CalculateMeanStd:
         image = Image.open(image_paths[0])
         return image_paths, image.mode
 
-    def get_image_root(self):
+    def get_image_root(self) -> str:
         if (
             self.dataset == "CIFAR10"
             or self.dataset == "CIFAR100"
